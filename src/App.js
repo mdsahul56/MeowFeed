@@ -9,18 +9,41 @@ import Postpage from "./Postpage";
 import EditPost from "./EditPost";
 import { Routes, Route } from "react-router-dom";
 import { DataProvider } from "./Context/DataContext";
+import Register from "./Register";
+import Login from "./Login";
+import Logout from "./Logout";
+import { Navigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "./auth/firebase";
 
 
 function App() {
+
+  const [user, setUser] = useState(null)
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser)
+    })
+    return () => unsubscribe()
+  }, [])
   
 
   return (
     <div className="App">
       <DataProvider>
-        <Header title="MeowFeed" />
-        <Nav />
+        { user && (
+          <>
+            <Header title="MeowFeed" />
+            <Nav />
+          </>
+        )}
         <Routes>
-          <Route path="/" element = {<Home />} />
+          <Route path="/" element={user ? <Home /> : <Navigate to = "/login" />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/logout" element={<Logout />} />
+          
             <Route path="post">
               <Route index element = {<Newpost />} />
               <Route path=":id" element={<Postpage />} />

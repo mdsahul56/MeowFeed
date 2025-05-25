@@ -7,7 +7,7 @@ const Nav = () => {
   const {search, setSearch} = useContext(DataContext)
   return (
     <nav className='Nav'>
-        <form className="searchForm" onSubmit={(e) => e.preventDefault()}>
+        <form className='searchForm' onSubmit={(e) => e.preventDefault()}>
             <label htmlFor='search'>Search</label>
             <input
                 id="search"
